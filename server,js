@@ -1,0 +1,21 @@
+const express = require('express');
+const mongoose = require('mongoose');
+
+const server = express();
+const SERVER_PORT = process.env.PORT || 3001;
+
+server.use(express.json());
+server.use(express.urlencoded({ extended: false }));
+server.use(express.static('public'));
+
+const MONGO_CONNECTION_STRING = process.env.MONGODB_URI || 'mongodb://localhost:27017/socialNetworkAPI';
+mongoose.connect(MONGO_CONNECTION_STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+mongoose.set('debug', true);
+
+server.use(require('./routes'));
+
+server.listen(SERVER_PORT, () => console.log(`Server is up and running on http://localhost:${SERVER_PORT}`));
